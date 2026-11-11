@@ -1451,7 +1451,7 @@
           <div class="chapter-item">SA restaurants &amp; biltong</div>
           <div class="chapter-item">Black professional networks</div>
         </div>
-        <a href="#join" class="btn-primary">Request the Handbook</a>
+        <a href="#join" class="btn-primary">Join to Get the Handbook</a>
       </div>
       <div class="handbook-visual fade-in fade-in-delay-1">
         <div class="handbook-mockup">
@@ -1570,7 +1570,7 @@
         </div>
       </div>
       <div class="fade-in fade-in-delay-1">
-        <form class="contact-form" action="https://formspree.io/f/xzdqzlbz" method="POST">
+        <form class="contact-form" id="joinForm" action="https://formspree.io/f/xzdqzlbz" method="POST">
           <div class="form-row">
             <div class="form-group">
               <label>First Name *</label>
@@ -1634,6 +1634,11 @@
           </p>
           <button type="submit" class="form-submit">Send Message →</button>
         </form>
+        <div class="form-thanks" id="formThanks" style="display:none;text-align:center;padding:56px 40px;background:var(--white);border-radius:12px;box-shadow:0 4px 40px rgba(0,0,0,0.07);">
+          <h3 style="font-family:var(--serif);font-weight:300;font-size:32px;color:var(--green);margin-bottom:16px;">Welcome to London Lekgotla</h3>
+          <p style="font-weight:300;line-height:1.8;margin-bottom:28px;color:var(--ink-mid);">Thank you. We have your details and will be in touch soon. In the meantime, here is your New Joiners Handbook.</p>
+          <a href="London_Lekgotla_New_Joiners_Handbook.pdf" target="_blank" rel="noopener" class="btn-gold">Open the Handbook</a>
+        </div>
       </div>
     </div>
   </div>
@@ -1707,6 +1712,25 @@
     btn.textContent = 'Thank you   we\'ll be in touch soon ✓';
     btn.style.background = 'var(--green-light)';
     btn.disabled = true;
+  }
+
+  // Form submit: send to Formspree, then reveal the handbook link
+  const joinForm = document.getElementById('joinForm');
+  if (joinForm) {
+    joinForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const btn = joinForm.querySelector('.form-submit');
+      btn.disabled = true; btn.textContent = 'Sending…';
+      try {
+        const r = await fetch(joinForm.action, { method: 'POST', body: new FormData(joinForm), headers: { 'Accept': 'application/json' } });
+        if (!r.ok) throw new Error('fail');
+        joinForm.style.display = 'none';
+        document.getElementById('formThanks').style.display = 'block';
+      } catch (err) {
+        btn.disabled = false; btn.textContent = 'Send Message →';
+        joinForm.submit();
+      }
+    });
   }
 
   // Smooth active nav highlighting
